@@ -1,60 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css" />
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nutrients Checker</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    #result {
-      margin-top: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-    }
-    #loading {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Nutrients Checker</h1>
-  <input type="text" id="foodInput" placeholder="Enter food name..." />
-  <!-- New input for weight -->
-<label for="weight">Enter weight:</label>
-<input type="number" id="weight" placeholder="e.g. 1000 for 1kg" />
-<span>grams</span>
-  <small>Enter weight in grams. 1kg = 1000g</small>
-  <button onclick="getNutrients()">Check</button>
+  <div class="container">
+    <h1>Nutrients Checker</h1>
 
-  <div id="loading">Loading...</div>
-  <div id="result"></div>
+    <input type="text" id="foodInput" placeholder="Enter food name (e.g., chicken, rice)..." />
+
+    <label for="weight">Enter weight (grams):</label>
+    <input type="number" id="weight" placeholder="e.g. 200" />
+    <small>Note: 1 kg = 1000 grams</small>
+
+    <button onclick="getNutrients()">Check</button>
+
+    <div id="loading">Loading...</div>
+    <div id="result"></div>
+  </div>
 
   <script>
     async function getNutrients() {
-      const query = document.getElementById('foodInput').value.trim();
-      const appId = '3b07311c';    // Replace with your App ID
-      const appKey = 'c355e4638a1e8e4f9596a0d6a59200a7';  // Replace with your App Key
+      const food = document.getElementById('foodInput').value.trim();
+      const weight = document.getElementById('weight').value.trim();
+      const appId = '3b07311c';
+      const appKey = 'c355e4638a1e8e4f9596a0d6a59200a7';
 
-      if (!query) {
-        alert("Please enter a food name.");
+      if (!food || !weight) {
+        alert("Please enter both food name and weight.");
         return;
       }
+
+      const query = `${weight} grams ${food}`;
 
       document.getElementById('loading').style.display = 'block';
       document.getElementById('result').innerHTML = '';
@@ -75,8 +55,6 @@
 
         if (data.foods && data.foods.length > 0) {
           const item = data.foods[0];
-
-          // Extract extra nutrients
           const getNutrient = (id) => {
             const n = item.full_nutrients.find(n => n.attr_id === id);
             return n ? `${n.value}g` : 'N/A';
@@ -104,7 +82,7 @@
 
       } catch (error) {
         document.getElementById('loading').style.display = 'none';
-        document.getElementById('result').innerText = 'Error fetching data. Please try again later.';
+        document.getElementById('result').innerText = 'Error fetching data.';
       }
     }
   </script>
